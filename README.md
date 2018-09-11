@@ -154,6 +154,11 @@ __Note:__ You can mount the PCB to the enclosure now, but you will probably find
 Subsequent firmware uploads can be done using the wireless OTA mechanism.
 * At this point, you can launch the Blynk app and run the notifier app dashboard.
 
+# Copyright
+
+Copyright 2018 Rob Redford.
+This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License.
+To view a copy of this license, visit [CC-BY-SA].
 
 
 [Blynk]: http://www.blynk.cc/
@@ -163,5 +168,6 @@ Subsequent firmware uploads can be done using the wireless OTA mechanism.
 [Time Library]: http://www.pjrc.com/teensy/td_libs_Time.html
 [ESP8266 OTA update documentation]: https://arduino-esp8266.readthedocs.io/en/latest/ota_updates/readme.html
 [address your carrier uses to send an SMS to your phone]: http://www.digitaltrends.com/mobile/how-to-send-e-mail-to-sms-text/
+[CC-BY-SA]: https://creativecommons.org/licenses/by-sa/4.0/
 
 
