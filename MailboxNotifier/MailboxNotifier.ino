@@ -4,9 +4,9 @@
 	Simple Blynk interface for a  magnetic reed switch application
 	Supports OTA uploads
 
-	Copyright 2017 Rob Redford
-	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/.
+	Copyright 2017/2018 Rob Redford
+	This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (CC-BY-SA).
+	To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/
 
 */
 
