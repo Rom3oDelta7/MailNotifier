@@ -13,11 +13,10 @@
 //#define DEBUG 3                                    // define as MAX desired debug level, or comment out to disable debug statements
 
 #ifdef DEBUG
-#define BLYNK_PRINT Serial    							// Comment this out to disable prints and save space
-
-#define DEBUG_MSG(L, H, M)	       if ((L) <= DEBUG) {Serial.print("DEBUG> "); Serial.print(H); Serial.print(": "); Serial.println(M);}
+   #define BLYNK_PRINT Serial
+   #define DEBUG_MSG(L, H, M)	       if ((L) <= DEBUG) {Serial.print("DEBUG> "); Serial.print(H); Serial.print(": "); Serial.println(M);}
 #else
-#define DEBUG_MSG(...)            ;
+   #define DEBUG_MSG(...)            ;
 #endif
 
 #include <ESP8266WiFi.h>
@@ -28,9 +27,11 @@
 #include <NTPRTC.h>											// https://github.com/Rom3oDelta7/NTP-RTC
 #include <WorldTimezones.h>								// https://github.com/Rom3oDelta7/NTP-RTC
 
-// ============================= Blynk ==================================================
+// ============================= Local Settings ==================================================
 
 #include "locals.h"
+
+// ============================= Blynk ==================================================
 
 #define DATE_DISPLAY		V1									// Labeled Value, L
 #define TIME_DISPLAY		V2									// Labeled Value, L
@@ -53,7 +54,7 @@ WidgetLED collectedLED(LED_COLLECTED);
 #define CHECK_INTERVAL     500                     // how frequently to check the mailbox (msec)
 #define REBOOT_DELAY			5000							// delay in msec for reboot slider
 
-#define DEFAULT_START  		(11 * 3600)	            // 11AM
+#define DEFAULT_START  		(11 * 3600)	            // 11AM - for operating window
 #define DEFAULT_STOP			(20 * 3600)             // 8PM
 
 int      startTimeInSecs = DEFAULT_START;	         // start & stop times from dashboard settings
@@ -69,7 +70,7 @@ bool     cycleComplete = false;                    // set after mail has been co
 #define SWITCH_PIN		4									// NC switch connected to ground (WeMos D2)
 #define RUNNING_LED		5									// LED pilot light (WeMos D1); 10 ohm resistor, Green LED
 
-#define SENSE_CLOSED    LOW                        // pin state when mailbox is closed
+#define SENSE_CLOSED    LOW                        // send pin state when mailbox is closed
   
 
 /*
@@ -170,7 +171,7 @@ void setup ( void ) {
    delay(20);
 	DEBUG_MSG(0, "Mbox", "*** STARTUP***");
 
-	pinMode(SWITCH_PIN, INPUT_PULLUP);					// normally closed switch, grounded
+	pinMode(SWITCH_PIN, INPUT);					      // normally closed switch
 	pinMode(RUNNING_LED, OUTPUT);
 	digitalWrite(RUNNING_LED, LOW);
 	
@@ -268,8 +269,8 @@ void setup ( void ) {
  update Blynk dashboard with the time the mailbox was opened
 */
 void displayOpenedTime ( void ) {
-	char currentTime[9];
-	time_t	timeNow = now();
+	char    currentTime[9];
+	time_t  timeNow = now();
 	
 	// use a constant time value to avoid corner cases where, for example, the hour changes between function calls
 	sprintf(currentTime, "%02d:%02d:%02d", hour(timeNow), minute(timeNow), second(timeNow));
@@ -283,14 +284,19 @@ void displayOpenedTime ( void ) {
 
 /*
  Check switch pin to determine if the mailbox is open.
- Normally the pin will be low; when open, the (internal) pullup will raise the line to high.
+ 
+ When the switch is closed, the MOSFET gate will be high and the MOSFET will be "on", connecting the 
+ drain and source and grounding the connection. In this state the 8266 pin will read "low".
+ When the switch is open, the gate will be pulled low, and the MOSFT will be off. The 8266 pin will then read the voltage differential 
+ on the drain pin and  read as "high".
+ 
  But if this is an EMI event instead, then after some initial noise, the line will still be low.
  Therefore, if the pin is high, wait for the debounce/EMI noise to settle, then read the line again -
  this should be the actual state.
  
  Note: the EMI issue only comes into play if we happen to be reading the pin while the EMI is occurring.
  Since we're reading the pin quite frequently, this may still happen. Adjust the delay if the time interval is insufficient,
- but don't wait so long that the mailbox may have been closed after delivery.
+ but don't wait so long that the mailbox may have been closed after delivery (and thus missing the event).
  */
 bool mailboxIsOpen ( void ) {
    if ( digitalRead(SWITCH_PIN) == SENSE_CLOSED ) {
@@ -308,6 +314,7 @@ bool mailboxIsOpen ( void ) {
 void loop ( void ) {
 	static int    today = day();
 	static time_t timeOpened = 0;
+   static bool    ignoredEventCounted = false;
 #ifdef DEBUG
 	static bool   displayed = false;
 #endif
@@ -354,6 +361,7 @@ void loop ( void ) {
                   timeOpened = now();
                   openedLED.on();
                   waitingForCollection = C_PENDING;
+                  ignoredEventCounted = false;
                   break;
                   
                case C_ACTIVE:
@@ -368,8 +376,11 @@ void loop ( void ) {
                      DEBUG_MSG(2, "Loop:\t", "mail collected");
                      waitingForCollection = C_INACTIVE;
                      cycleComplete = true;
-                     
-                     readyLED.off();
+                  } else if ( !ignoredEventCounted ) {
+                     // count these as ignored events
+                     ++ignoredEventCount;
+                     ignoredEventCounted = true;
+                     Blynk.virtualWrite(IGNORED_EVENTS, ignoredEventCount);
                   }
                   break;
                   
@@ -382,6 +393,7 @@ void loop ( void ) {
                waitingForCollection = C_ACTIVE;
                DEBUG_MSG(3, "Loop:", "mailbox closed before collection");
             }
+            ignoredEventCounted = false;
             readyLED.on();
          }
       } else {
