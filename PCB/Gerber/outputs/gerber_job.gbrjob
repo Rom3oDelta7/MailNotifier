@@ -1,0 +1,13 @@
+G04 Gerber job file.*
+%TF.FileFunction,JobInfo*%
+%TF.GenerationSoftware,Autodesk,EAGLE,9.1.3*%
+%TF.CreationDate,2018-09-11T05:34:09Z*%
+%TF.Part,Single*%
+%MOMM*%
+%TJ.B_Owner,Robert Redford <rd_redford@yahoo.com>*%
+%TJ.B_ID,Mailbox Notifier 2.1*%
+%TJ.B_LayerNum,2*%
+%TJ.B_Thickness,1.570000*%
+%TJ.B_Size_X,49.999900*%
+%TJ.B_Size_Y,49.999900*%
+M02*
