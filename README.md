@@ -1,5 +1,5 @@
 # MailNotifier
-Hardware and software solution to be notified when your mail arrives (DRAFT)
+Hardware and software solution to be notified when your mail arrives
 
 ![Apple Watch notification](https://github.com/Rom3oDelta7/MailNotifier/blob/master/Photos/apple%20watch.jpg)
 
