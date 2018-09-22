@@ -116,6 +116,8 @@ Just about any filament is fine - I used PLA with a layer height of 0.4mm.
 
 ### Assembly
 
+![enclosure](https://github.com/Rom3oDelta7/MailNotifier/blob/master/Photos/assembled.jpg)
+
 * 3D print the enclosure base and lid.
 * Assemble the discrete components to the PCB.
 * Solder the female headers that come with the WeMOS to the PCB.
