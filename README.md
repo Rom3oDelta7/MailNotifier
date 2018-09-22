@@ -138,7 +138,7 @@ __Note:__ You can mount the PCB to the enclosure now, but you will probably find
 
 * Ensure the aforementioned local/personal changes have been implemented in the sketch (.ino) file and "locals.h".
 * For the first upload, connect a microUSB plug to the WeMOS.
-* In the Arduino IDE, select the "WeMOS D1 R2 & mini" board.
+* In the Arduino IDE, select the "LOLIN(WeMos)D1 R2 & Mini" board.
 * Board settings:
 
 |Parameter|Setting|

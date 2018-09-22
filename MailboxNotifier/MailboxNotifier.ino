@@ -67,10 +67,11 @@ CollectionState waitingForCollection;				   // flag for 2nd opening, which we as
 
 bool     cycleComplete = false;                    // set after mail has been collected to disable further notifications for the day
 
+// use "LOLIN(WeMos)D1 R2 & Mini" to get these defines D2=2, D5=14
 #define SWITCH_PIN		D2									// NC switch connected to ground
 #define RUNNING_LED		D5									// LED pilot light; 10 ohm resistor, Green LED
 
-#define SENSE_CLOSED    LOW                        // send pin state when mailbox is closed
+#define SENSE_CLOSED    LOW                        // send pin state when mailbox is closed: open:high, closed:low
   
 
 /*
