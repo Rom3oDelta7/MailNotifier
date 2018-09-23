@@ -6,9 +6,7 @@ Hardware and software solution to be notified when your mail arrives
 This is a simple system that will notify you when your mailbox has been delivered.
 You get a notification for the first opening (mail delivered) and the second (mail collected).
 These notifications will be sent to your phone (using Blynk) and SMS text.
-Optionally, you can also use the Blynk Apple Watch app to get the notifications on your watch
-(_Note: I recently noticed that this app disappeared from my watch and the watch App Store.
-Check the App Store to see if it has come back._)
+If you have an Apple Watch, the notification will be displayed on the watch as well (see pictrure above).
 
 Since the wiring was already in place for my home
 I designed this with a wired connection to my mailbox using a standard magnetic reed switch such as that found in
