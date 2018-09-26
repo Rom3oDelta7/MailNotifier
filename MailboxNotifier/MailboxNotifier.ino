@@ -378,7 +378,7 @@ void loop ( void ) {
                      waitingForCollection = C_INACTIVE;
                      cycleComplete = true;
                   } else if ( !ignoredEventCounted ) {
-                     // count these as ignored events
+                     // count these as a single ignored event
                      ++ignoredEventCount;
                      ignoredEventCounted = true;
                      Blynk.virtualWrite(IGNORED_EVENTS, ignoredEventCount);
@@ -388,7 +388,8 @@ void loop ( void ) {
                default:
                   break;
             }
-         } else {
+         } else { 
+            //closed
             if ( waitingForCollection == C_PENDING ) {
                // ensure mailbox has been closed first before checking for collection
                waitingForCollection = C_ACTIVE;
@@ -400,9 +401,17 @@ void loop ( void ) {
       } else {
          // ignore events outside working time (count events until cycle is complete, then stop counting)
          readyLED.off();                    // turn off when outside working window
-         if ( mailboxOpen ) {
+         static bool alreadyOpen = false;
+         
+         // only count an event if the mailbox has been closed since we last saw the open state
+         if ( !alreadyOpen && mailboxOpen ) {
+            // closed -> open
             ++ignoredEventCount;
+            alreadyOpen = true;
             Blynk.virtualWrite(IGNORED_EVENTS, ignoredEventCount);
+         } else if ( alreadyOpen && !mailboxOpen ) {
+            // open -> closed
+            alreadyOpen = false;
          }
       }
    }
